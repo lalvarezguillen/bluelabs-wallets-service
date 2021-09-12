@@ -1,0 +1,31 @@
+version: '3.4'
+
+volumes:
+  postgres: {}
+
+services:
+  postgres:
+    image: postgres:alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+
+  wallets-service:
+    build: 
+      context: .
+    ports:
+      - 9000:9000
+    environment:
+      LISTEN_ON: '0.0.0.0:9000'
+      DB_USERNAME: postgres
+      DB_PASSWORD: postgres
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_NAME: postgres
+      DB_SSLMODE: disable
+    depends_on: 
+      - postgres
